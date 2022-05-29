@@ -5,34 +5,34 @@ import requests, time, datetime, re,sys, json, random
 # 用户名（格式为 13800138000）
 
 # 酷推skey和server酱sckey和企业微信设置，只用填一个其它留空即可
-skey = sys.argv[]
+# skey = sys.argv[]
 # 推送server酱
-sckey = sys.argv[4]
+# sckey = sys.argv[4]
 # 企业微信推送
 # 是否开启企业微信推送false关闭true开启，默认关闭，开启后请填写设置并将上面两个都留空
-position = sys.argv[5]
-base_url = 'https://qyapi.weixin.qq.com/cgi-bin/gettoken?'
-req_url = 'https://qyapi.weixin.qq.com/cgi-bin/message/send?access_token='
-corpid = sys.argv[6]  # 企业ID， 登陆企业微信，在我的企业-->企业信息里查看
-corpsecret = sys.argv[7]  # 自建应用，每个自建应用里都有单独的secret
-agentid = sys.argv[8]  # 填写你的应用ID，不加引号，是个整型常数,就是AgentId
-touser = sys.argv[9]  # 指定接收消息的成员，成员ID列表（多个接收者用‘|’分隔，最多支持1000个）。特殊情况：指定为”@all”，则向该企业应用的全部成员发送
-toparty = sys.argv[10]  # 指定接收消息的部门，部门ID列表，多个接收者用‘|’分隔，最多支持100个。当touser为”@all”时忽略本参数
-totag = sys.argv[11]  # 指定接收消息的标签，标签ID列表，多个接收者用‘|’分隔，最多支持100个。当touser为”@all”时忽略本参数
+# position = sys.argv[5]
+# base_url = 'https://qyapi.weixin.qq.com/cgi-bin/gettoken?'
+# req_url = 'https://qyapi.weixin.qq.com/cgi-bin/message/send?access_token='
+# corpid = sys.argv[6]  # 企业ID， 登陆企业微信，在我的企业-->企业信息里查看
+# corpsecret = sys.argv[7]  # 自建应用，每个自建应用里都有单独的secret
+# agentid = sys.argv[8]  # 填写你的应用ID，不加引号，是个整型常数,就是AgentId
+# touser = sys.argv[9]  # 指定接收消息的成员，成员ID列表（多个接收者用‘|’分隔，最多支持1000个）。特殊情况：指定为”@all”，则向该企业应用的全部成员发送
+# toparty = sys.argv[10]  # 指定接收消息的部门，部门ID列表，多个接收者用‘|’分隔，最多支持100个。当touser为”@all”时忽略本参数
+# totag = sys.argv[11]  # 指定接收消息的标签，标签ID列表，多个接收者用‘|’分隔，最多支持100个。当touser为”@all”时忽略本参数
 
 # （用于测试推送如果改了能收到推送，推送设置就没问题，看看是不是set_push列表里面没设置推送，仔细看下面我写的很详细）要修改的步数，直接输入想要修改的步数值，（默认）留空为随机步数，改了这个直接运行固定值（用于测试推送）
 # 测试好记得留空不然一直提交固定步数
 step1 = ""
 
 # 开启根据地区天气情况降低步数（默认关闭）
-open_get_weather = sys.argv[12]
-# 设置获取天气的地区（上面开启后必填）如：area = "宁波"
-area = sys.argv[13]
+# open_get_weather = sys.argv[12]
+# 设置获取天气的地区（上面开启后必填）如：area = "南京"
+# area = sys.argv[13]
 
 # 以下如果看不懂直接默认就行只需改上面
 
 # 系数K查询到天气后降低步数比率，如查询得到设置地区为多云天气就会在随机后的步数乘0.9作为最终修改提交的步数
-K_dict = {"多云": 0.9, "阴": 0.8, "小雨": 0.7, "中雨": 0.5, "大雨": 0.4, "暴雨": 0.3, "大暴雨": 0.2, "特大暴雨": 0.2}
+# K_dict = {"多云": 0.9, "阴": 0.8, "小雨": 0.7, "中雨": 0.5, "大雨": 0.4, "暴雨": 0.3, "大暴雨": 0.2, "特大暴雨": 0.2}
 
 # 设置运行程序时间点,24小时制（不要设置0，1，2可能会发生逻辑错误），这边设置好云函数触发里也要改成相同的小时运行，与time_list列表对应，如默认：30 0 8,10,13,15,17,19,21 * * * *，不会的改8,10,13,15,17,19,21就行替换成你要运行的时间点，其它复制
 # 默认表示为8点10点13点15点17点19点21点运行,如需修改改time_list列表，如改成：time_list = [7, 9, 13, 15, 17, 19, 20]就表示为7点9点13点15点17点19点20点运行，云函数触发里面也要同步修改
